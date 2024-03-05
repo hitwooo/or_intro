@@ -1,2 +1,2 @@
-# or_intro
-twooo's path to or
+# OR_intro
+twooo's path to OR
