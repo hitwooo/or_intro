@@ -9,6 +9,9 @@ def read_file(file_path):
         n, wmax = map(int, lines[0].split())
         profits, weights = [],[]
         for line in lines[1:]:
+            parts = line.split()
+            if len(parts) != 2:
+                continue
             v, w = map(float, line.split())
             profits.append(v)
             weights.append(w)
@@ -47,6 +50,13 @@ def solve_knapsack(n, wmax, profits, weights):
         print('No solution found')
 # %%
 directory_path = '/Users/hitwooo/Desktop/OR/02 Coding/Knapsack/instances_01_KP/low-dimensional'
+data_dict = process_files(directory_path)
+
+for filename, data in data_dict.items():
+    print(f'Solving knapsack problem for: {filename}')
+    solve_knapsack(data['n'], data['wmax'], data['profits'], data['weights'])
+# %%
+directory_path = '/Users/hitwooo/Desktop/OR/02 Coding/Knapsack/instances_01_KP/large_scale_doable'
 data_dict = process_files(directory_path)
 
 for filename, data in data_dict.items():
