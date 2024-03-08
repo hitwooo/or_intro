@@ -48,14 +48,14 @@ def solve_knapsack(n, wmax, profits, weights):
         print(f'Total profit: {solution.objective_value}')
     else:
         print('No solution found')
-# %%
+# %% Low dimension
 directory_path = '/Users/hitwooo/Desktop/OR/02 Coding/Knapsack/instances_01_KP/low-dimensional'
 data_dict = process_files(directory_path)
 
 for filename, data in data_dict.items():
     print(f'Solving knapsack problem for: {filename}')
     solve_knapsack(data['n'], data['wmax'], data['profits'], data['weights'])
-# %%
+# %% Large scale
 directory_path = '/Users/hitwooo/Desktop/OR/02 Coding/Knapsack/instances_01_KP/large_scale_doable'
 data_dict = process_files(directory_path)
 
