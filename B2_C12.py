@@ -72,3 +72,5 @@ if solution:
 else:
     print("No solution found")
 # %% Exercises 12.3 - 5
+# Define the model
+model3 = model
