@@ -1,6 +1,7 @@
 # %% Import 
 from docplex.mp.model import Model
 import os
+import numpy as np
 
 # %% Exercises 12.1 - 6
 # Define the model
@@ -71,6 +72,64 @@ if solution:
     print(f"Total profit: {solution.get_objective_value()}")
 else:
     print("No solution found")
-# %% Exercises 12.3 - 5
+# %% Exercises 12.3 - 5a 5b
 # Define the model
-model3 = model
+model3 = Model('Airplanes')
+
+# Define variables
+type = model3.integer_var_list(4, name = 'type')
+
+# Constant input
+profit = [4.2, 3, 2.3]
+cost = [67, 50, 35]
+max_budget = 1500
+max_airplanes = 30
+
+# Constraints
+model3.add_constraint(model3.sum(type[i] for i in range(3)) <= max_airplanes)
+model3.add_constraint(model3.sum(type[i] * cost[i] for i in range(3)) <= max_budget)
+#model3.add_constraint(type[0]*(5/3) + type[1]*(4/3) + type[2] <= 40)
+model3.add_constraint(type[2] <= 40)
+model3.add_constraint(type[1] <= (3/4)*40)
+model3.add_constraint(type[0] <= (3/5)*40)
+
+# Objective function
+net_profit = model3.sum(profit[i] * type[i] for i in range(3))
+model3.maximize(net_profit)
+
+# Solve the solution
+solution = model3.solve()
+if solution:
+    print("Optimal net profit:")
+    for i in range(4):
+        print(f"Type {i+1}: {solution[type[i]]} airplanes")
+    print(f"Total profit: {solution.get_objective_value()}")
+else:
+    print("No solution found")
+# %% Exercises 12.3 - 5c 5d
+# Define the model
+model4 = Model('AirplanesBIP')
+
+# Define variables
+x = model4.integer_var_list(40, name = 'type')
+
+# Constant input
+profit = [4.2, 3, 2.3]
+cost = [67, 50, 35]
+max_budget = 1500
+max_airplanes = 30
+
+# Constraints
+x = np.array
+
+# Objective function
+
+# Solve the solution
+solution = model4.solve()
+if solution:
+    print("Optimal net profit:")
+    for i in range(4):
+        print(f"Type {i+1}: {solution[type[i]]} airplanes")
+    print(f"Total profit: {solution.get_objective_value()}")
+else:
+    print("No solution found")
