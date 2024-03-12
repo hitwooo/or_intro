@@ -7,7 +7,7 @@ def extract_data(block):
     parts = one_line_data.split()
     n, m, optimal_value = int(parts[0]), int(parts[1]), float(parts[2])
     p = [float(x) for x in parts[3:3+n]]
-    constraint_data = parts[3+n:-m]
+    constraint_data = [float(x) for x in parts[3+n:-m]]
     r = [constraint_data[i*n:(i+1)*n] for i in range(m)]
     b = [float(x) for x in parts[-m:]]
     return n, m, optimal_value, p, r, b
@@ -37,10 +37,9 @@ def solve_mknap(n,m,p,r,b):
 
     #define variables
     x = model.binary_var_list(n, name = 'x')
-
     #define constraints
     for i in range(m):
-        model.add_constraint(model.sum(x[j] * r[i][j] for j in range(n)) <= b[i])
+            model.add_constraint(model.sum(x[j] * r[i][j]  for j in range(n)) <= b[i])
     #define objective function
     model.maximize(model.sum(p[j] * x[j] for j in range(n)))
 
