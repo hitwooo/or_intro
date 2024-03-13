@@ -4,6 +4,7 @@ import re
 import pandas as pd
 import time 
 # %% Functions for data extracting
+# Extract data within block
 def extract_data(block):
     one_line_data = ' '.join(block.split())
     parts = one_line_data.split()
@@ -14,9 +15,12 @@ def extract_data(block):
     b = [float(x) for x in parts[-m:]]
     return n, m, optimal_value, p, r, b
 
+# Extract data from the file path
 def read_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
+    
+    #extract blocks
     blocks = re.split(r'\n\s*\n+', content.strip())
     data_list = []  
     for index, block in enumerate(blocks[1:]):
@@ -43,6 +47,7 @@ def solve_mknap(problem_number,n,m,optimal_value,p,r,b,results_df):
 
     #define variables
     x = model.binary_var_list(n, name = 'x')
+
     #define constraints
     for i in range(m):
             model.add_constraint(model.sum(x[j] * r[i][j]  for j in range(n)) <= b[i])
@@ -69,9 +74,13 @@ def solve_mknap(problem_number,n,m,optimal_value,p,r,b,results_df):
     })
     results_df = pd.concat([results_df, new_row], ignore_index=True)
     return results_df
-#% file
+
+#% Test instances
 file_path = '/Users/hitwooo/Downloads/mknap1.txt'
 data_list = read_file(file_path)
 for data in data_list:
     results_df = solve_mknap(data['problem_number'],data['n'], data['m'],data['optimal_value'], data['p'], data['r'], data['b'],results_df)
-print(results_df)s
+
+
+excel_file_path = '/Users/hitwooo/Downloads/mknap_results.xlsx'
+results_df.to_excel(excel_file_path, index=False, engine='openpyxl')
