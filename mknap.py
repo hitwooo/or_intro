@@ -1,6 +1,8 @@
 # %%
 from docplex.mp.model import Model
 import re
+import pandas as pd
+import time 
 # %% Functions for data extracting
 def extract_data(block):
     one_line_data = ' '.join(block.split())
@@ -29,11 +31,15 @@ def read_file(file_path):
             'b': b        
         })
     return data_list
-
+# %%
+results_df = pd.DataFrame(columns=['Instance name', 'Knapsacks', 'Objects', 'Solution value', 'Optimal Value', 'Solution status', 'Gap(%)', 'Time(sec)'])
 # %% Function to solve multidimensional knapsack problem
-def solve_mknap(n,m,p,r,b):
+def solve_mknap(problem_number,n,m,optimal_value,p,r,b,results_df):
     #define model
     model = Model('mknap')
+    
+    #start time
+    start_time = time.time()
 
     #define variables
     x = model.binary_var_list(n, name = 'x')
@@ -46,23 +52,26 @@ def solve_mknap(n,m,p,r,b):
     #solve model
     solution = model.solve()
 
-    if solution:
-        print("Solution found:")
-        print(f"Optimal value: {solution.get_objective_value()}")
-        for j in range(n):
-            if x[j].solution_value > 0.5:
-                print(f"Item {j} is selected.")
-    else:
-        print("No solution found.")
+    #end time
+    end_time = time.time()
+    solve_time = end_time - start_time
 
+    #data frame to store value
+    new_row = pd.DataFrame({
+        'Instance name': [f'Problem {problem_number}'],
+        'Knapsacks': [m],
+        'Objects': [n],
+        'Solution value': [solution.get_objective_value() if solution else 'N/A'],
+        'Optimal Value': [optimal_value],
+        'Solution status': [solution.solve_details.status if solution else 'No Solution Found'],
+        'Gap(%)': [((solution.get_objective_value() - optimal_value) / solution.get_objective_value()) * 100 if solution.get_objective_value() != 0 else 'N/A'],
+        'Time(sec)': [solve_time]
+    })
+    results_df = pd.concat([results_df, new_row], ignore_index=True)
+    return results_df
 #% file
 file_path = '/Users/hitwooo/Downloads/mknap1.txt'
 data_list = read_file(file_path)
-#for data in data_list:
-#    print(f"Solving multiple knapsack problem for: {data['problem_number']}")
-#    solve_mknap(data['n'], data['m'], data['p'], data['r'], data['b'])
-
-#print(data_list[0])
-solve_mknap(data_list[0]['n'], data_list[0]['m'], data_list[0]['p'], data_list[0]['r'], data_list[0]['b'])
-
- 
+for data in data_list:
+    results_df = solve_mknap(data['problem_number'],data['n'], data['m'],data['optimal_value'], data['p'], data['r'], data['b'],results_df)
+print(results_df)s
