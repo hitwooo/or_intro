@@ -53,22 +53,29 @@ def solve_tsp(file_path):
 def plot_tour_geo(file_path):
     problem, solution, x_vars,solve_time = solve_tsp(file_path)
     print(solve_time)
-    geo_points = {node: problem.node_coords[node] for node in problem.get_nodes()}
+    if solution:
+        # for i in solution.get_nodes():
+        #     for j in solution.get_nodes():
+        #         print(f'Route from {i} to {j}')
+        print(solution)
+    else:
+        print('No solution found')
+    # geo_points = {node: problem.node_coords[node] for node in problem.get_nodes()}
     
-    for node in problem.get_nodes():
-        plt.plot(geo_points[node][1], geo_points[node][0], 'bo')  # Plot long as x, lat as y
+    # for node in problem.get_nodes():
+    #     plt.plot(geo_points[node][1], geo_points[node][0], 'bo')  # Plot long as x, lat as y
 
-    for i, j in x_vars.keys():
-        if solution.get_value(x_vars[i, j]) > 0.5:
-            plt.plot([geo_points[i][1], geo_points[j][1]], [geo_points[i][0], geo_points[j][0]], 'g-')
+    # for i, j in x_vars.keys():
+    #     if solution.get_value(x_vars[i, j]) > 0.5:
+    #         plt.plot([geo_points[i][1], geo_points[j][1]], [geo_points[i][0], geo_points[j][0]], 'g-')
 
-    # Additional plot settings
-    plt.xlabel('Longitude')
-    plt.ylabel('Latitude')
-    plt.title('TSP Solution on GEO Coordinates')
-    plt.grid(True)
-    plt.show()
+    # # Additional plot settings
+    # plt.xlabel('Longitude')
+    # plt.ylabel('Latitude')
+    # plt.title('TSP Solution on GEO Coordinates')
+    # plt.grid(True)
+    # plt.show()
 
 # %% Solve the problem
-file_path = '/Users/hitwooo/Downloads/gr96.tsp'
+file_path = '/Users/hitwooo/Downloads/bayg29.tsp'
 plot_tour_geo(file_path)
